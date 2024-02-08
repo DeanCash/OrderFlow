@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "dev": "@npx tailwindcss -i wwwroot/css/tailwind/config.css -o wwwroot/css/app.min.css --watch"
+  },
   "dependencies": {
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",
