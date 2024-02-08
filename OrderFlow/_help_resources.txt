@@ -1,0 +1,4 @@
+Iets over de structuur - https://www.pragimtech.com/blog/blazor/blazor-project-structure/
+Useful tutorials - https://www.youtube.com/watch?v=xr56fmgLl74
+
+De Github - https://github.com/DeanCash/OrderFlow
