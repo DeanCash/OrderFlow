@@ -12,6 +12,14 @@
 
         public Consumable() { }
 
+        public Consumable(string name, string description, int price, ConsumableType type)
+        {
+            Name = name;
+            Description = description;
+            Price = price;
+            Type = type;
+        }
+
         public Consumable(int id, string name, string description, int price, ConsumableType type)
         {
             Id = id;

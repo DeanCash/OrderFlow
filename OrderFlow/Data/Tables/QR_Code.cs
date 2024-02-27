@@ -9,6 +9,12 @@
 
         public QR_Code() { }
 
+        public QR_Code(string imagePath, Table table)
+        {
+            ImagePath = imagePath;
+            Table = table;
+        }
+
         public QR_Code(int id, string imagePath, Table table)
         {
             Id = id;

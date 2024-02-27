@@ -12,6 +12,14 @@
 
         public Order() { }
 
+        public Order(Table table, bool isProcessed, DateTime orderedAt, DateTime processedAt)
+        {
+            Table = table;
+            IsProcessed = isProcessed;
+            OrderedAt = orderedAt;
+            ProcessedAt = processedAt;
+        }
+
         public Order(int id, Table table, bool isProcessed, DateTime orderedAt, DateTime processedAt)
         {
             Id = id;

@@ -11,6 +11,13 @@ namespace OrderFlow.Data.Tables
 
         public OrderedConsumable() { }
 
+        public OrderedConsumable(Consumable consumable, Order order, decimal price)
+        {
+            Consumable = consumable;
+            Order = order;
+            Price = price;
+        }
+
         public OrderedConsumable(int id, Consumable consumable, Order order, decimal price)
         {
             Id = id;

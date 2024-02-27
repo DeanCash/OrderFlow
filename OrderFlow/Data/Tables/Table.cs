@@ -13,6 +13,12 @@ namespace OrderFlow.Data.Tables
 
         public Table() { }
 
+        public Table(QR_Code qrCode, string tableCode)
+        {
+            QRCode = qrCode;
+            TableCode = tableCode;
+        }
+
         public Table(int id, QR_Code qrCode, string tableCode)
         {
             Id = id;
