@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OrderFlow.Backend;
 using Toolbelt.Extensions.DependencyInjection;
+using RouteData = Microsoft.AspNetCore.Routing.RouteData;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
@@ -25,6 +27,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseRouter(routes =>
+{
+    // Own custom backend routes
+    BackendRoutesProvider.ConfigureRoutes(routes);
+});
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
