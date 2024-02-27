@@ -39,6 +39,19 @@ namespace OrderFlow.Data
                 .HasOne(e => e.QRCode)
                 .WithOne(e => e.Table)
                 .HasForeignKey<QR_Code>(e => e.Id);
+
+            AddSeeders(modelBuilder);
+
+
+        }
+
+        private void AddSeeders(ModelBuilder modelBuilder)
+        {
+            //modelBuilder.Entity<Order>()
+            //    .HasData(
+            //        new Order()
+            //    )
+            ;
         }
     }
 }
