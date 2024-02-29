@@ -11,8 +11,8 @@ using OrderFlow.Data;
 namespace OrderFlow.Migrations
 {
     [DbContext(typeof(DatabaseDbContext))]
-    [Migration("20240227205325_idwuuPLS")]
-    partial class idwuuPLS
+    [Migration("20240229082957_pppzkw92")]
+    partial class pppzkw92
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,12 +32,16 @@ namespace OrderFlow.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -45,6 +49,116 @@ namespace OrderFlow.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Consumables");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Fresh and juicy apple",
+                            ImagePath = "apple.png",
+                            Name = "Apple",
+                            Price = 1.1m,
+                            Type = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Delicious cheesy pizza",
+                            ImagePath = "pizza.png",
+                            Name = "Pizza",
+                            Price = 5.15m,
+                            Type = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Classic sandwich with ham and cheese",
+                            ImagePath = "sandwich.png",
+                            Name = "Sandwich",
+                            Price = 4.3m,
+                            Type = 0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Buttery and flaky croissant",
+                            ImagePath = "croissant.png",
+                            Name = "Croissant",
+                            Price = 2m,
+                            Type = 0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Classic pasta with marinara sauce",
+                            ImagePath = "pasta.png",
+                            Name = "Pasta",
+                            Price = 9.3m,
+                            Type = 0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Juicy beef burger with cheese",
+                            ImagePath = "burger.png",
+                            Name = "Burger",
+                            Price = 4.4m,
+                            Type = 0
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Refreshing orange juice",
+                            ImagePath = "orange-juice.jpg",
+                            Name = "Orange Juice",
+                            Price = 2m,
+                            Type = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Carbonated cola drink",
+                            ImagePath = "cola.png",
+                            Name = "Cola",
+                            Price = 1.4m,
+                            Type = 1
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Refreshing iced tea",
+                            ImagePath = "icedtea.png",
+                            Name = "Iced Tea",
+                            Price = 2m,
+                            Type = 1
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Homemade lemonade",
+                            ImagePath = "lemonade.png",
+                            Name = "Lemonade",
+                            Price = 3m,
+                            Type = 1
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Rich and aromatic coffee",
+                            ImagePath = "coffee.jpg",
+                            Name = "Coffee",
+                            Price = 3.1m,
+                            Type = 1
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "Creamy milkshake",
+                            ImagePath = "milkshake.png",
+                            Name = "Milkshake",
+                            Price = 4m,
+                            Type = 1
+                        });
                 });
 
             modelBuilder.Entity("OrderFlow.Data.Tables.Order", b =>
