@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <Folder Include="Layouts\" />
+    <Folder Include="wwwroot\img\consumables\" />
+    <Folder Include="wwwroot\img\qr_codes\" />
   </ItemGroup>
 
   <ItemGroup>
