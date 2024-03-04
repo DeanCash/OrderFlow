@@ -1,5 +1,6 @@
 ﻿using AngleSharp.Io;
 using Microsoft.AspNetCore.Http;
+using OrderFlow.Data;
 using System.Text;
 
 namespace OrderFlow.Backend
@@ -13,8 +14,14 @@ namespace OrderFlow.Backend
 
         private async static Task ApiTestGet(HttpRequest request, HttpResponse response, RouteData data)
         {
+            using DatabaseDbContext db = new DatabaseDbContext();
+
+            var cb = (from c in db.Consumables
+                      select c).ToList();
+
             await response.BodyWriter.WriteAsync(
-                Encoding.UTF8.GetBytes("Hello World, from API!")
+                Encoding.UTF8.GetBytes($"{cb[0].Name}")
+                
             );
         }
     }

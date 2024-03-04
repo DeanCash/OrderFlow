@@ -2,7 +2,11 @@
 {
     public enum ConsumableType
     {
-        Food = 0,
-        Drink,
+        Voorgerechten = 0,
+        Hoofdgerechten,
+        Desserts,
+        Koffie,
+        Frisdranken,
+        Bieren
     }
 }
