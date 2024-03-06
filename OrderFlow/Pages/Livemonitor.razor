@@ -1,0 +1,73 @@
+﻿@page "/live"
+@using System.Net.WebSockets
+@using OrderFlow.Data.Tables
+@using System.Text
+@using System
+@using OrderFlow.Data
+@inject DatabaseDbContext DbContext
+@implements IDisposable
+
+<h2 class="text-lg">Livemonitor</h2>
+
+<p>Connection Status: @socket.State</p>
+
+<button @onclick="RefreshOrders">Get</button>
+
+<table>
+    <thead></thead>
+    <tbody>
+        @foreach (var i in orders)
+        {
+            <tr>
+                <td>@i.Id - @i.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    ClientWebSocket socket = new ClientWebSocket();
+    CancellationTokenSource cancelToken = new CancellationTokenSource();
+    List<Consumable> orders = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        OrderFlow.Backend.LiveMonitor.Notifier += new EventHandler((o, e) =>
+        {
+            orders = GetOrders();
+        });
+
+        await socket.ConnectAsync(new Uri("ws://localhost:5016/api/live/ws"), cancelToken.Token);
+    }
+
+    public void RefreshOrders()
+    {
+        orders = GetOrders();
+    }
+
+    public async Task OrderListener(ClientWebSocket ws)
+    {
+        ArraySegment<Byte> buffer = new ArraySegment<byte>(new Byte[1]);
+
+        while (true)
+        {
+            await ws.ReceiveAsync(buffer, CancellationToken.None);
+
+            orders = GetOrders();
+        }
+    }
+
+    public List<Consumable> GetOrders()
+    {
+        return (from o in DbContext.Consumables
+                select o).ToList();
+    }
+
+    public void Dispose()
+    {
+        cancelToken.Dispose();
+        _ = socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bye", CancellationToken.None);
+    }
+}

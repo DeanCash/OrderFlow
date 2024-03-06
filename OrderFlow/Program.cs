@@ -1,17 +1,27 @@
+using OrderFlow.Backend;
+using OrderFlow.Data;
+using Toolbelt.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using OrderFlow.Backend;
-using Toolbelt.Extensions.DependencyInjection;
-using RouteData = Microsoft.AspNetCore.Routing.RouteData;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddTransient<DatabaseDbContext>();
+
+builder.Services.AddServerSideBlazor().AddHubOptions(options => {
+    options.MaximumReceiveMessageSize = null; // no limit or use a number
+});
 
 // Custom
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
+
+// Custom
+app.UseWebSockets();
+
+BackendRoutesProvider.ConfigureWSRoutes(app);
 
 if (!app.Environment.IsDevelopment())
 {
