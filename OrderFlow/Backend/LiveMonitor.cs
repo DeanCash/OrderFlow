@@ -5,11 +5,12 @@ namespace OrderFlow.Backend
     public class LiveMonitor
     {
         //public static Channel<object> Notifier = Channel.CreateUnbounded<object>();
-        public static event EventHandler Notifier;
+        public delegate Task AsyncEventHandler(object sender, EventArgs e);
+        public static event AsyncEventHandler Notifier;
 
-        public static void Notify()
+        public static async Task Notify()
         {
-            Notifier.Invoke(null, new EventArgs());
+            await Notifier.Invoke(null, new EventArgs());
         }
     }
 }

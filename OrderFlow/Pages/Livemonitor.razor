@@ -35,30 +35,30 @@
     CancellationTokenSource cancelToken = new CancellationTokenSource();
     List<Consumable> orders = new();
     HttpClient httpClient = null!;
-    HubConnection hubConnection = null!;
+    //HubConnection hubConnection = null!;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         // Initialize vars
-        httpClient = httpClientBuilder.CreateClient();
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(navigation.ToAbsoluteUri("api/live/ws"))
-            .Build();
+        //httpClient = httpClientBuilder.CreateClient();
+        //hubConnection = new HubConnectionBuilder()
+        //    .WithUrl(navigation.ToAbsoluteUri("api/live/ws"))
+        //    .Build();
 
         // End init
 
-        hubConnection.On("ReceiveMessage", async () =>
+        //hubConnection.On("ReceiveMessage", async () =>
+        //{
+        //    orders = await GetOrders();
+        //});
+
+        //await hubConnection.StartAsync();
+
+        OrderFlow.Backend.LiveMonitor.Notifier += new OrderFlow.Backend.LiveMonitor.AsyncEventHandler(new Func<object, EventArgs, Task>(async (o, e) =>
         {
             orders = await GetOrders();
-        });
-
-        await hubConnection.StartAsync();
-
-        OrderFlow.Backend.LiveMonitor.Notifier += new EventHandler(async (o, e) =>
-        {
-            orders = await GetOrders();
-        });
+        }));
 
         //string wsEndpoint = "ws" + navigation.BaseUri.TrimStart("https");
 
@@ -79,18 +79,19 @@
 
     public async Task<List<Consumable>> GetOrders()
     {
-        //return await ctx.Consumables.Select(c => c).ToListAsync();
-        var result = await httpClient.GetAsync(navigation.BaseUri + "api/orders");
-        var orders = await result.Content.ReadFromJsonAsync<List<Consumable>>();
+        return await ctx.Consumables.Select(c => c).ToListAsync();
+        //var result = await httpClient.GetAsync(navigation.BaseUri + "api/orders");
+        //var orders = await result.Content.ReadFromJsonAsync<List<Consumable>>();
 
-        return orders;
+        //return orders;
     }
 
     // Button event
     public async Task RefreshOrders()
     {
         //orders = await GetOrders();
-        await hubConnection.InvokeAsync("SendMessage");
+        //await hubConnection.InvokeAsync("SendMessage");
+        await OrderFlow.Backend.LiveMonitor.Notify();
     }
 
     public void Dispose()

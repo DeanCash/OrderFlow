@@ -5,6 +5,7 @@ using OrderFlow.Data;
 using System.Net.WebSockets;
 using System.Text;
 using Microsoft.AspNetCore.SignalR;
+using OrderFlow.Data.Tables;
 
 namespace OrderFlow.Backend
 {
@@ -82,10 +83,10 @@ namespace OrderFlow.Backend
             using var tokenSource = new CancellationTokenSource();
             tokenSource.Token.ThrowIfCancellationRequested();
 
-            var handler = new EventHandler((object? o, EventArgs e) =>
+            var handler = new LiveMonitor.AsyncEventHandler(new Func<object, EventArgs, Task>(async (o, e) =>
             {
                 Console.WriteLine("GOT CONNECTION");
-            });
+            }));
             LiveMonitor.Notifier += handler;
 
             try
