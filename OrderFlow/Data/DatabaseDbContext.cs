@@ -17,7 +17,7 @@ namespace OrderFlow.Data
             // Tom     : 10.4.28-MariaDB
             // Soufyan : 10.4.21-MariaDB
             // Dean    : 10.4.21-MariaDB
-
+            
             optionsBuilder.UseMySql(
                 "Server=127.0.0.1;User=root;Password=;Database=OrderFlow_Db;Port=3306;",
                 ServerVersion.Parse(

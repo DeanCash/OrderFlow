@@ -14,13 +14,14 @@ namespace OrderFlow.Backend
         {
             routes.MapGet("/api", ApiTestGet);
             routes.MapPost("/api/live", OrderMade);
+            routes.MapGet("/api/orders", GetAllOrders);
         }
 
         public static void ConfigureWSRoutes(WebApplication app)
         {
             app.Use(async (context, next) =>
             {
-                if (context.Request.Path == "/api/live/ws")
+                if (context.Request.Path == "/api/live/ws/TEMP")
                 {
                     if (context.WebSockets.IsWebSocketRequest)
                     {
@@ -37,6 +38,8 @@ namespace OrderFlow.Backend
                     await next();
                 }
             });
+
+            app.MapHub<LiveOrderHub>("/api/live/ws");
         }
 
         // Test
@@ -62,6 +65,15 @@ namespace OrderFlow.Backend
             LiveMonitor.Notify();
         }
 
+        private async static Task GetAllOrders(HttpRequest request, HttpResponse response, RouteData data)
+        {
+            using (var db = new DatabaseDbContext())
+            {
+                var orders = await db.Consumables.Select(o => o).ToListAsync();
+                await response.WriteAsJsonAsync(orders);
+            }
+        }
+
         // Endpoint to listen to new orders
         //private async static Task ListenOrders(HttpRequest request, HttpResponse response, RouteData data)
         public async static Task ListenOrders(HttpContext context, WebSocket socket)
@@ -82,7 +94,6 @@ namespace OrderFlow.Backend
                 {
                     await ws.SendAsync(new byte[] { 0 }, WebSocketMessageType.Binary, true, tokenSource.Token);
                 }
-            } catch (Exception _e) {
             } finally
             {
                 LiveMonitor.Notifier -= handler;

@@ -1,10 +1,15 @@
 ﻿@page "/live"
 @using System.Net.WebSockets
+@using Microsoft.AspNetCore.SignalR.Client;
+@using Microsoft.EntityFrameworkCore;
 @using OrderFlow.Data.Tables
+@using OrderFlow.Util
 @using System.Text
 @using System
 @using OrderFlow.Data
-@inject DatabaseDbContext DbContext
+@inject NavigationManager navigation
+@inject DatabaseDbContext ctx
+@inject IHttpClientFactory httpClientBuilder
 @implements IDisposable
 
 <h2 class="text-lg">Livemonitor</h2>
@@ -29,22 +34,35 @@
     ClientWebSocket socket = new ClientWebSocket();
     CancellationTokenSource cancelToken = new CancellationTokenSource();
     List<Consumable> orders = new();
+    HttpClient httpClient = null!;
+    HubConnection hubConnection = null!;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        // Initialize vars
+        httpClient = httpClientBuilder.CreateClient();
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(navigation.ToAbsoluteUri("api/live/ws"))
+            .Build();
 
-        OrderFlow.Backend.LiveMonitor.Notifier += new EventHandler((o, e) =>
+        // End init
+
+        hubConnection.On("ReceiveMessage", async () =>
         {
-            orders = GetOrders();
+            orders = await GetOrders();
         });
 
-        await socket.ConnectAsync(new Uri("ws://localhost:5016/api/live/ws"), cancelToken.Token);
-    }
+        await hubConnection.StartAsync();
 
-    public void RefreshOrders()
-    {
-        orders = GetOrders();
+        OrderFlow.Backend.LiveMonitor.Notifier += new EventHandler(async (o, e) =>
+        {
+            orders = await GetOrders();
+        });
+
+        //string wsEndpoint = "ws" + navigation.BaseUri.TrimStart("https");
+
+        //await socket.ConnectAsync(new Uri($"{wsEndpoint}api/live/ws"), cancelToken.Token);
     }
 
     public async Task OrderListener(ClientWebSocket ws)
@@ -55,19 +73,29 @@
         {
             await ws.ReceiveAsync(buffer, CancellationToken.None);
 
-            orders = GetOrders();
+            orders = await GetOrders();
         }
     }
 
-    public List<Consumable> GetOrders()
+    public async Task<List<Consumable>> GetOrders()
     {
-        return (from o in DbContext.Consumables
-                select o).ToList();
+        //return await ctx.Consumables.Select(c => c).ToListAsync();
+        var result = await httpClient.GetAsync(navigation.BaseUri + "api/orders");
+        var orders = await result.Content.ReadFromJsonAsync<List<Consumable>>();
+
+        return orders;
+    }
+
+    // Button event
+    public async Task RefreshOrders()
+    {
+        //orders = await GetOrders();
+        await hubConnection.InvokeAsync("SendMessage");
     }
 
     public void Dispose()
     {
         cancelToken.Dispose();
-        _ = socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bye", CancellationToken.None);
+        //_ = socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bye", CancellationToken.None);
     }
 }

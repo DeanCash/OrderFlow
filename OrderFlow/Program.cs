@@ -15,6 +15,7 @@ builder.Services.AddServerSideBlazor().AddHubOptions(options => {
 
 // Custom
 builder.Services.AddHttpClient();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
