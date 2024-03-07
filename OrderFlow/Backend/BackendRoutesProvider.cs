@@ -63,7 +63,8 @@ namespace OrderFlow.Backend
         // This shouldn't be a problem since there wont by thousands of orders
         private async static Task OrderMade(HttpRequest request, HttpResponse response, RouteData data)
         {
-            LiveMonitor.Notify();
+            FakeOrder order = await request.ReadFromJsonAsync<FakeOrder>();
+            await LiveMonitor.FakeNotify(order);
         }
 
         private async static Task GetAllOrders(HttpRequest request, HttpResponse response, RouteData data)

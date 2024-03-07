@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OrderFlow.Data;
 
@@ -10,9 +11,11 @@ using OrderFlow.Data;
 namespace OrderFlow.Migrations
 {
     [DbContext(typeof(DatabaseDbContext))]
-    partial class DatabaseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240307080026_migraz")]
+    partial class migraz
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -373,6 +376,28 @@ namespace OrderFlow.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("QR_Codes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ImagePath = "/qr_code1.png"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ImagePath = "/qr_code2.png"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ImagePath = "/qr_code3.png"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ImagePath = "/qr_code4.png"
+                        });
                 });
 
             modelBuilder.Entity("OrderFlow.Data.Tables.Table", b =>

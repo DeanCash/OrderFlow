@@ -32,10 +32,10 @@ namespace OrderFlow.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Table>()
-                .HasOne(e => e.QRCode)
-                .WithOne(e => e.Table)
-                .HasForeignKey<QR_Code>(e => e.Id);
+            //modelBuilder.Entity<Table>()
+            //    .HasOne(e => e.QRCode)
+            //    .WithOne(e => e.Table)
+            //    .HasForeignKey<QR_Code>(e => e.Id);
 
             AddSeeders(modelBuilder);
         }
@@ -78,6 +78,68 @@ namespace OrderFlow.Data
                     new Consumable { Id = 29, Name = "Milkshake", Description = "Creamy milkshake", Price = 4m, ImagePath = "milkshake.png", Type = ConsumableType.Frisdranken }
                 )
             ;
+
+
+            //var qrc1 = new QR_Code(1, "/1.png");
+            //var qrc2 = new QR_Code(2, "/2.png");
+            //var qrc3 = new QR_Code(3, "/3.png");
+            //modelBuilder.Entity<QR_Code>()
+            //    .HasData(
+            //        qrc1,
+            //        qrc2,
+            //        qrc3
+            //    )
+            //;
+            
+            //modelBuilder.Entity<Table>()
+            //    .HasData(
+            //        new Table(1, qrc1, "TN01"),
+            //        new Table(2, qrc2, "TN02"),
+            //        new Table(3, qrc3, "TN03")
+            //    )
+            //;
+
+
+            //var table1 = new Table(1, "TN01");
+            //var table2 = new Table(2, "TN02");
+            //var table3 = new Table(3, "TN03");
+            //modelBuilder.Entity<Table>()
+            //    .HasData(
+            //        table1,
+            //        table2,
+            //        table3
+            //    )
+            //;
+
+            //modelBuilder.Entity<QR_Code>()
+            //    .HasData(
+            //        new QR_Code(1, "/1.png", table1),
+            //        new QR_Code(2, "/2.png", table2),
+            //        new QR_Code(3, "/3.png", table3)
+            //    )
+            //;
+
+            //var qr_code1 = new QR_Code(1, "/qr_code1.png", null);
+            //var qr_code2 = new QR_Code(2, "/qr_code2.png", null);
+            //var qr_code3 = new QR_Code(3, "/qr_code3.png", null);
+            //var qr_code4 = new QR_Code(4, "/qr_code4.png", null);
+            //modelBuilder.Entity<QR_Code>()
+            //    .HasData(
+            //        qr_code1,
+            //        qr_code2,
+            //        qr_code3,
+            //        qr_code4
+            //    )
+            //;
+
+            //modelBuilder.Entity<Table>()
+            //    .HasData(
+            //        new Table(1, qr_code1, "TN01"),
+            //        new Table(2, qr_code2, "TN02"),
+            //        new Table(3, qr_code3, "TN03"),
+            //        new Table(4, qr_code4, "TN04")
+            //    )
+            //;
 
             //modelBuilder.Entity<QR_Code>()
             //    .HasData(

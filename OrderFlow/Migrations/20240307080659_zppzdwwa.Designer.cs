@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OrderFlow.Data;
 
@@ -10,9 +11,11 @@ using OrderFlow.Data;
 namespace OrderFlow.Migrations
 {
     [DbContext(typeof(DatabaseDbContext))]
-    partial class DatabaseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240307080659_zppzdwwa")]
+    partial class zppzdwwa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -363,7 +366,6 @@ namespace OrderFlow.Migrations
             modelBuilder.Entity("OrderFlow.Data.Tables.QR_Code", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<string>("ImagePath")
@@ -381,18 +383,30 @@ namespace OrderFlow.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("QRCodeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("TableCode")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QRCodeId");
-
                     b.ToTable("Tables");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            TableCode = "TN01"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            TableCode = "TN02"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            TableCode = "TN03"
+                        });
                 });
 
             modelBuilder.Entity("OrderFlow.Data.Tables.Order", b =>
@@ -425,15 +439,15 @@ namespace OrderFlow.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("OrderFlow.Data.Tables.Table", b =>
+            modelBuilder.Entity("OrderFlow.Data.Tables.QR_Code", b =>
                 {
-                    b.HasOne("OrderFlow.Data.Tables.QR_Code", "QRCode")
-                        .WithMany()
-                        .HasForeignKey("QRCodeId")
+                    b.HasOne("OrderFlow.Data.Tables.Table", "Table")
+                        .WithOne("QRCode")
+                        .HasForeignKey("OrderFlow.Data.Tables.QR_Code", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("QRCode");
+                    b.Navigation("Table");
                 });
 
             modelBuilder.Entity("OrderFlow.Data.Tables.Consumable", b =>
@@ -449,6 +463,9 @@ namespace OrderFlow.Migrations
             modelBuilder.Entity("OrderFlow.Data.Tables.Table", b =>
                 {
                     b.Navigation("Orders");
+
+                    b.Navigation("QRCode")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

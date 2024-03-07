@@ -16,15 +16,15 @@
 
 <p>Connection Status: @socket.State</p>
 
-<button @onclick="RefreshOrders">Get</button>
+@*<button @onclick="RefreshOrders">Get</button>*@
 
 <table>
     <thead></thead>
     <tbody>
-        @foreach (var i in orders)
+        @foreach (var i in fakeOrders)
         {
             <tr>
-                <td>@i.Id - @i.Name</td>
+                <td>@i.TableCode - @i.Made</td>
             </tr>
         }
     </tbody>
@@ -34,6 +34,7 @@
     ClientWebSocket socket = new ClientWebSocket();
     CancellationTokenSource cancelToken = new CancellationTokenSource();
     List<Consumable> orders = new();
+    List<FakeOrder> fakeOrders = new();
     HttpClient httpClient = null!;
     //HubConnection hubConnection = null!;
 
@@ -54,10 +55,14 @@
         //});
 
         //await hubConnection.StartAsync();
-
-        OrderFlow.Backend.LiveMonitor.Notifier += new OrderFlow.Backend.LiveMonitor.AsyncEventHandler(new Func<object, EventArgs, Task>(async (o, e) =>
+        var thatShit = async () =>
         {
-            orders = await GetOrders();
+            await InvokeAsync(StateHasChanged);
+        };
+        OrderFlow.Backend.LiveMonitor.FakeNotifier += new OrderFlow.Backend.LiveMonitor.FakeOrderAsyncEventHandler(new Func<object, FakeOrder, Task>(async (o, e) =>
+        {
+            fakeOrders.Add(e);
+            await thatShit();
         }));
 
         //string wsEndpoint = "ws" + navigation.BaseUri.TrimStart("https");
@@ -77,9 +82,23 @@
         }
     }
 
+    public async Task<List<FakeOrder>> InitialFakeOrders()
+    {
+        //new FakeOrder();
+        return new();
+    }
+
+    public async Task<List<FakeOrder>> GetFakeOrders()
+    {
+        return new();
+    }
+
     public async Task<List<Consumable>> GetOrders()
     {
-        return await ctx.Consumables.Select(c => c).ToListAsync();
+        using (ctx)
+        {
+            return await ctx.Consumables.Select(c => c).ToListAsync();
+        }
         //var result = await httpClient.GetAsync(navigation.BaseUri + "api/orders");
         //var orders = await result.Content.ReadFromJsonAsync<List<Consumable>>();
 
