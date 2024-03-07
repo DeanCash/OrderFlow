@@ -1,8 +1,75 @@
-﻿page "/menu/{TableId}"
+﻿@page "/menu/"
+@using OrderFlow.Data.Tables;
+@using OrderFlow.Data;
 
-<h3>Menu @TableId</h3>
+<div class="container-fluid">
+<h3>Menu </h3>
+
+
+	<div class="card-deck row">
+		@foreach (Consumable item in drinks)
+		{
+			<div class="col-3 mb-5">
+			<div class="card m-1 h-100">
+					<img class="card-img-top" src="/img/consumables/@item.ImagePath">
+					<div class="card-body">
+						<h5 class="card-title">@item.Name</h5>
+						<h5 class="card-Price">€ </h5>
+						<p class="card-text">@item.Description</p>
+						<div class="mt-auto">
+					<a class="btn btn-primary w-100" href="https://www.google.com">Add to cart</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+	<hr />
+<div class="card-deck row">
+	@foreach (Consumable item in foods)
+	{
+		<div class="col-3 mb-5">
+			<div class="card m-1 h-100">
+				<img class="card-img-top" src="/img/consumables/@item.ImagePath">
+				<div class="card-body">
+					<h5 class="card-title">@item.Name</h5>
+					<h5 class="card-Price">€ @item.Price</h5>
+					<p class="card-text">@item.Description</p>
+					<a class="btn btn-primary w-100 mt-auto" href="https://www.google.com">Add to cart</a>
+				</div>
+			</div>
+		</div>
+	}
+</div>
+</div>
 
 @code {
-    [Parameter]
-    public string TableId { get; set; }
+
+
+	List<Consumable> drinks = new List<Consumable>();
+	List<Consumable> foods = new List<Consumable>();
+	int[] cap = {1,2,3,4 };
+	protected override async Task OnInitializedAsync()
+	{
+		using(DatabaseDbContext db = new DatabaseDbContext())
+		{
+			// db.Consumables.Where(c => c.Type == ConsumableType.Koffie || c.Type == ConsumableType.Bieren || c.Type == ConsumableType.Frisdranken).ToList();
+			// Where(c => c.Type == ConsumableType.Koffie || c.Type == ConsumableType.Bieren || c.Type == ConsumableType.Frisdranken)
+
+			foreach (var item in db.Consumables.ToList())
+			{
+				if (item.Type == ConsumableType.Koffie || item.Type == ConsumableType.Bieren || item.Type == ConsumableType.Frisdranken)
+				{
+					
+					drinks.Add(item);
+				}
+				else
+				{
+					foods.Add(item);
+				}
+
+			}
+		}
+	}
+
 }
