@@ -12,11 +12,22 @@
 @inject IHttpClientFactory httpClientBuilder
 @implements IDisposable
 
-<h2 class="text-lg">Livemonitor</h2>
+<style>
+    .livemonitor {
+        font-size: xx-large;
+        padding-block: 2rem;
+        background-color: gray;
+        text-align: center;
+    }
+</style>
 
-<p>Connection Status: @socket.State</p>
+<h2 class="livemonitor">Livemonitor</h2>
+
+<p class="websocket">Connection Status: @socket.State</p>
 
 @*<button @onclick="RefreshOrders">Get</button>*@
+
+<br />
 
 <table>
     <thead></thead>
